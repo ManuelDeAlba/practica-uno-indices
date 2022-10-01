@@ -1,6 +1,14 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <random> // Generador de numeros aleatorios
+#include <chrono> // Para la semilla de numeros aleatorios
+
+#define TAMCODIGO 20
+#define TAMNOMBRE 30
+#define TAMDESCRIPCION 200
+#define TAMPRECIO 10
+#define TAMESPECIALIDAD 25
 
 using namespace std;
 
@@ -10,34 +18,75 @@ void leerRegistro();
 
 class Producto{
     private:
-        char codigo[20];
-        char nombre[30];
-        char descripcion[100];
-        char precio[10];
+        char codigo[TAMCODIGO];
+        char nombre[TAMNOMBRE];
+        char descripcion[TAMDESCRIPCION];
+        char precio[TAMPRECIO];
+        char especialidad[TAMESPECIALIDAD];
     public:
         Producto(char[], char[], char[], char[]);
         void mostrar();
+        void crearCodigo();
 
         friend ostream& operator <<(ostream &out, const Producto &p){
-            out<<p.codigo<<"|"<<p.nombre<<"|"<<p.descripcion<<"|"<<p.precio<<endl;
+            out<<p.codigo<<"|"<<p.nombre<<"|"<<p.descripcion<<"|"<<p.precio<<"|"<<p.especialidad<<endl;
             return out;
-        }
-
-        friend istream& operator >>(istream &in, Producto &p){
-            
-            return in;
         }
 };
 
-Producto::Producto(char _codigo[], char _nombre[], char _desc[], char _precio[]){
-    strcpy(codigo, _codigo);
+Producto::Producto(char _nombre[], char _desc[], char _precio[], char _especialidad[]){
     strcpy(nombre, _nombre);
     strcpy(descripcion, _desc);
     strcpy(precio, _precio);
+    strcpy(especialidad, _especialidad);
+
+    crearCodigo();
 }
 
 void Producto::mostrar(){
-    cout<<codigo<<"|"<<nombre<<"|"<<descripcion<<"|"<<precio<<endl;
+    cout<<codigo<<"|"<<nombre<<"|"<<descripcion<<"|"<<precio<<"|"<<especialidad<<endl;
+}
+
+void Producto::crearCodigo(){
+    //! FORMA CANÓNICA
+    /*
+        1) Número aleatorio de dos dígitos
+        2) Concatenar la primera letra de la especialidad (P, PI, H, B)
+        3) Concatenar las 3 primeras letras del nombre de producto
+    */
+
+    // Se crea un generador de números aleatorios
+    std::default_random_engine generator(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> distribution(00, 99);
+   
+    // Variables para obtener las partes de la forma canónica
+    char especial[TAMESPECIALIDAD] = "PICAR Y COMPARTIR"; // Cadena para comparar con la especialidad
+    llenarCampo(especial, TAMESPECIALIDAD);
+
+    char c[20] = "";
+    int aleatorio = distribution(generator);
+    char cEspecialidad[3] = "";
+    char cNombre[4] = {nombre[0], nombre[1], nombre[2]};
+
+    // Tomar las 2 primeras letras si la especialidad es "PICAR Y COMPARTIR"
+    if(strcmp(especialidad, especial) == 0){
+        // Si es picar y compartir
+        cEspecialidad[0] = especialidad[0];
+        cEspecialidad[1] = especialidad[1];
+    } else {
+        cEspecialidad[0] = especialidad[0];
+    }
+
+    // Concatenar las partes a la variable temporal
+    sprintf(c, "%02d", aleatorio);
+    strcat(c, cEspecialidad);
+    strcat(c, cNombre);
+
+    // Rellenar con espacios
+    llenarCampo(c, 20);
+
+    // Copiar la cadena temporal en el código
+    strcpy(codigo, c);
 }
 
 int main(){
@@ -80,28 +129,30 @@ void llenarCampo(char cadena[], int tam){
 void insertarRegistro(){
     ofstream archivo;
 
-    char c[20] = "";
-    char n[30] = "";
-    char d[100] = "";
-    char p[10] = "";
+    char n[TAMNOMBRE] = "";
+    char d[TAMDESCRIPCION] = "";
+    char p[TAMPRECIO] = "";
+    char e[TAMESPECIALIDAD] = "";
 
-    cout<<"Ingresa el codigo: ";
-    cin.ignore();
-    cin.getline(c, 20, '\n');
     cout<<"Ingresa el nombre: ";
-    cin.getline(n, 30, '\n');
+    cin.ignore();
+    cin.getline(n, TAMNOMBRE, '\n');
     cout<<"Ingresa la descripcion: ";
-    cin.getline(d, 100, '\n');
+    cin.getline(d, TAMDESCRIPCION, '\n');
     cout<<"Ingresa el precio: ";
-    cin.getline(p, 10, '\n');
+    cin.getline(p, TAMPRECIO, '\n');
+    cout<<"Ingresa la especialidad: ";
+    cin.getline(e, TAMESPECIALIDAD, '\n');
+
+    //!--------------------PARA ELEGIR ESPECIALIDAD, HACER UN MENU CON LAS 3 OPCIONES---------------------
 
     // Rellenar con espacios
-    llenarCampo(c, 20);
-    llenarCampo(n, 30);
-    llenarCampo(d, 100);
-    llenarCampo(p, 10);
+    llenarCampo(n, TAMNOMBRE);
+    llenarCampo(d, TAMDESCRIPCION);
+    llenarCampo(p, TAMPRECIO);
+    llenarCampo(e, TAMESPECIALIDAD);
 
-    Producto a(c, n, d, p);
+    Producto a(n, d, p, e);
 
     a.mostrar();
 
@@ -132,19 +183,21 @@ void leerRegistro(){
         /*  Mientras no sea el final del archivo
             obtiene los datos de cada registro
         */
-        char codigo[20];
-        char nombre[30];
-        char descripcion[100];
-        char precio[10];
+        char codigo[TAMCODIGO];
+        char nombre[TAMNOMBRE];
+        char descripcion[TAMDESCRIPCION];
+        char precio[TAMPRECIO];
+        char especialidad[TAMESPECIALIDAD];
 
-        archivo.getline(codigo, 20, '|');
-        archivo.getline(nombre, 30, '|');
-        archivo.getline(descripcion, 100, '|');
-        archivo.getline(precio, 10, '\n');
+        archivo.getline(codigo, TAMCODIGO, '|');
+        archivo.getline(nombre, TAMNOMBRE, '|');
+        archivo.getline(descripcion, TAMDESCRIPCION, '|');
+        archivo.getline(precio, TAMPRECIO, '|');
+        archivo.getline(especialidad, TAMESPECIALIDAD, '\n');
 
         // Si existen los datos se muestran
-        if(codigo != "" && nombre != "" && descripcion != "" && precio != ""){
-            cout<<codigo<<"|"<<nombre<<"|"<<descripcion<<"|"<<precio<<endl;
+        if(codigo != "" && nombre != "" && descripcion != "" && precio != "" && especialidad != ""){
+            cout<<codigo<<"|"<<nombre<<"|"<<descripcion<<"|"<<precio<<"|"<<especialidad<<endl;
         }
     }
 
