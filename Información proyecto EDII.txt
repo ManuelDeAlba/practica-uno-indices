@@ -1,0 +1,31 @@
+Información del PDF
+
+- Archivo registros (Entradas secuenciales, registros de longitud fija)
+- Archivo índice
+
+- Cargar el índice en la RAM utilizando un arreglo
+
+- Altas (Insertar en los dos archivos)
+- Consultas (Buscar por llave primaria (código))
+
+- Hacer forma canónica
+- Método de ordenamiento (ordenar solo el índice)
+- Función para llenar espacios de campos
+
+
+Recuperar registros:
+- Encontrar llave en el índice
+- Tomar distancia en bytes utilizando el NRR
+- Usar seek y la distancia para trasladarse al registro
+- Leer registro
+
+
+
+Guardar dos productos de cada especialidad
+No usar string
+Inventar precio
+
+Poner los nombres de los alumnos en el código
+Solo una persona sube la carpeta sin comprimir (después de revisar en clase)
+
+Llevar computadora para exponer
