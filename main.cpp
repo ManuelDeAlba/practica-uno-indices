@@ -100,11 +100,10 @@ int main(){
 
         switch(op){
             case '1':
-                cout<<"Insertando"<<endl;
                 insertarRegistro();
                 break;
             case '2':
-                cout<<"Consultando por codigo"<<endl;
+                cout<<"Consulta por codigo:"<<endl;
                 leerRegistro();
                 break;
             case '3': break;
@@ -129,11 +128,13 @@ void llenarCampo(char cadena[], int tam){
 void insertarRegistro(){
     ofstream archivo;
 
+    // Se piden todos los datos del producto
     char n[TAMNOMBRE] = "";
     char d[TAMDESCRIPCION] = "";
     char p[TAMPRECIO] = "";
     char e[TAMESPECIALIDAD] = "";
 
+    cout<<"INGRESA LOS DATOS EN MAYUSCULAS"<<endl;
     cout<<"Ingresa el nombre: ";
     cin.ignore();
     cin.getline(n, TAMNOMBRE, '\n');
@@ -156,7 +157,7 @@ void insertarRegistro(){
 
     a.mostrar();
 
-    archivo.open("Productos.txt", ios::app);
+    archivo.open("MENU.txt", ios::app);
 
     if(archivo.fail()){
         cout<<"No se pudo abrir el archivo"<<endl;
@@ -169,10 +170,10 @@ void insertarRegistro(){
 }
 
 void leerRegistro(){
-    //! POR AHORA LEE TODOS LOS REGISTROS
+    //! POR AHORA LEE TODOS LOS REGISTROS (CAMBIAR)
     ifstream archivo;
 
-    archivo.open("Productos.txt", ios::in);
+    archivo.open("MENU.txt", ios::in);
 
     if(archivo.fail()){
         cout<<"No se pudo abrir el archivo"<<endl;
