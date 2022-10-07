@@ -197,10 +197,11 @@ void ordenarIndice(){
     }
     indiceArchivo.close();
 
-    for(int i=0; i<ultimoNRR+1; i++){
-        cout<<"codigo: "<<indiceProducto[i].getCodigo()<<endl;
-        cout<<"nnr: "<<indiceProducto[i].getNrr()<<endl;
-    }
+    // Mostrar registros del indice (sin ordenar)
+    // for(int i=0; i<ultimoNRR+1; i++){
+    //     cout<<"codigo: "<<indiceProducto[i].getCodigo()<<endl;
+    //     cout<<"nnr: "<<indiceProducto[i].getNrr()<<endl;
+    // }
 
     //VERIFICA LA ULTIMA POSICION PARA COLOCAR LA POSICION CORRESPONDIENTE
     IndiceProducto auxIndice;
@@ -208,8 +209,6 @@ void ordenarIndice(){
         for(int i =1; i<ultimoNRR+1; i++){
             for(int j =0; j<(ultimoNRR+1)-i; j++){
                 if(strcmp(indiceProducto[j].getCodigo(),indiceProducto[j+1].getCodigo()) > 0){
-
-
                     auxIndice=indiceProducto[j];
                     indiceProducto[j]=indiceProducto[j+1];
                     indiceProducto[j+1]=auxIndice;
@@ -218,10 +217,11 @@ void ordenarIndice(){
         }
     }
 
-    for(int i=0; i<ultimoNRR+1; i++){
-        cout<<"codigo ordenado: "<<indiceProducto[i].getCodigo()<<endl;
-        cout<<"nnr ordenado: "<<indiceProducto[i].getNrr()<<endl;
-    }
+    // Mostrar registros del indice (ordenados)
+    // for(int i=0; i<ultimoNRR+1; i++){
+    //     cout<<"codigo ordenado: "<<indiceProducto[i].getCodigo()<<endl;
+    //     cout<<"nnr ordenado: "<<indiceProducto[i].getNrr()<<endl;
+    // }
 
     ofstream indiceOut;
     indiceOut.open("INDICE.txt", std::ofstream::out | std::ofstream::trunc);
