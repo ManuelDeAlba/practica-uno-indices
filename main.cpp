@@ -9,17 +9,17 @@
 #define TAMDESCRIPCION 200
 #define TAMPRECIO 10
 #define TAMESPECIALIDAD 25
-#define TAMNNR 5
-#define TAMREGISTRO TAMCODIGO + TAMNOMBRE + TAMDESCRIPCION + TAMPRECIO + TAMESPECIALIDAD + 5
+#define TAMNRR 5
+#define TAMREGISTRO TAMCODIGO + TAMNOMBRE + TAMDESCRIPCION + TAMPRECIO + TAMESPECIALIDAD
 
 using namespace std;
 
 int ultimoNRR;
 void llenarCampo(char[], int);
-void insertarRegistro();
-void leerRegistro();
 void ordenarIndice();
 int contarLineas();
+void insertarRegistro();
+void leerRegistro();
 
 class Producto{
     private:
@@ -103,33 +103,33 @@ void Producto::crearCodigo(){
 class IndiceProducto{
     private:
         char codigo[TAMCODIGO];
-        char nrr[TAMNNR];
+        char NRR[TAMNRR];
     public:
         IndiceProducto();
         IndiceProducto(char[], char[]);
         char * getCodigo();
-        char * getNrr();
+        char * getNRR();
         void setCodigo(char*);
-        void setNrr(char*);
+        void setNRR(char*);
 };
 
 IndiceProducto::IndiceProducto() {}
-IndiceProducto::IndiceProducto(char _codigo[], char _nrr[]){
+IndiceProducto::IndiceProducto(char _codigo[], char _NRR[]){
     strcpy(this->codigo, _codigo);
-    strcpy(this->nrr, _nrr);
+    strcpy(this->NRR, _NRR);
 }
 
 char* IndiceProducto::getCodigo(){
     return this->codigo;
 }
-char* IndiceProducto::getNrr(){
-    return this->nrr;
+char* IndiceProducto::getNRR(){
+    return this->NRR;
 }
 void IndiceProducto::setCodigo(char _codigo[]){
     strcpy(this->codigo, _codigo);
 }
-void IndiceProducto::setNrr(char _nrr[]){
-    strcpy(this->nrr, _nrr);
+void IndiceProducto::setNRR(char _NRR[]){
+    strcpy(this->NRR, _NRR);
 }
 
 int main(){
@@ -147,6 +147,7 @@ int main(){
                 system("cls");
                 insertarRegistro();
                 ordenarIndice();
+                system("pause");
                 break;
             case '2':
                 system("cls");
@@ -157,8 +158,7 @@ int main(){
             case '3':
                 break;
             default:
-                system("cls");
-                cout<<"Elige una opcion correcta"<<endl;
+                cout<<"\nElige una opcion correcta"<<endl;
                 system("pause");
                 break;
         }
@@ -167,40 +167,49 @@ int main(){
     return 0;
 }
 
+void llenarCampo(char cadena[], int tam){
+    // Si el caracter actual no contiene nada, se sustituye por un espacio
+    // El último caracter no se sustituye porque es \0
+    for(int i = 0; i < tam - 1; i++){
+        if(!cadena[i]) cadena[i] = ' ';
+    }
+}
+
 void ordenarIndice(){
     IndiceProducto indiceProducto[ultimoNRR + 1];
-    ifstream indiceArchivo;
+    ifstream archivoIndice;
 
-    indiceArchivo.open("INDICE.txt", ios::in);
+    archivoIndice.open("INDICE.txt", ios::in);
 
-    if(indiceArchivo.fail()){
+    if(archivoIndice.fail()){
         cout<<"No se pudo abrir el archivo (INDICE)"<<endl;
         system("pause");
         exit(1);
     }
 
+    // Obtener los registros del indice y pasarlos a un arreglo
     int counterArreglo = 0;
-    while(!indiceArchivo.eof()){
+    while(!archivoIndice.eof()){
         /*  Mientras no sea el final del archivo
             obtiene los datos de cada registro */
         char codigo[TAMCODIGO];
-        char nnr[TAMNNR];
-        indiceArchivo.getline(codigo, TAMCODIGO, '|');
-        indiceArchivo.getline(nnr, TAMNNR, '\n');
+        char NRR[TAMNRR];
+        archivoIndice.getline(codigo, TAMCODIGO, '|');
+        archivoIndice.getline(NRR, TAMNRR, '\n');
         
-        //VERIFICA SI LA LECTURA CONTIENE UN VALOR O YA ES EL ULTIMO SALDO DE LINEA
+        //VERIFICA SI LA LECTURA CONTIENE UN VALOR O YA ES EL ULTIMO SALTO DE LINEA
         if (codigo && strlen(codigo) != 0){
             indiceProducto[counterArreglo].setCodigo(codigo);
-            indiceProducto[counterArreglo].setNrr(nnr);
+            indiceProducto[counterArreglo].setNRR(NRR);
             counterArreglo++;
         }
     }
-    indiceArchivo.close();
+    archivoIndice.close();
 
     // Mostrar registros del indice (sin ordenar)
     // for(int i=0; i<ultimoNRR+1; i++){
     //     cout<<"codigo: "<<indiceProducto[i].getCodigo()<<endl;
-    //     cout<<"nnr: "<<indiceProducto[i].getNrr()<<endl;
+    //     cout<<"NRR: "<<indiceProducto[i].getNRR()<<endl;
     // }
 
     //VERIFICA LA ULTIMA POSICION PARA COLOCAR LA POSICION CORRESPONDIENTE
@@ -220,7 +229,7 @@ void ordenarIndice(){
     // Mostrar registros del indice (ordenados)
     // for(int i=0; i<ultimoNRR+1; i++){
     //     cout<<"codigo ordenado: "<<indiceProducto[i].getCodigo()<<endl;
-    //     cout<<"nnr ordenado: "<<indiceProducto[i].getNrr()<<endl;
+    //     cout<<"NRR ordenado: "<<indiceProducto[i].getNRR()<<endl;
     // }
 
     ofstream indiceOut;
@@ -232,22 +241,24 @@ void ordenarIndice(){
     }
 
     for(int i=0; i<ultimoNRR+1; i++){
-        indiceOut<<indiceProducto[i].getCodigo()<<"|"<<indiceProducto[i].getNrr()<<endl;
+        indiceOut<<indiceProducto[i].getCodigo()<<"|"<<indiceProducto[i].getNRR()<<endl;
     }
     indiceOut.close();
 }
 
-void llenarCampo(char cadena[], int tam){
-    // Si el caracter actual no contiene nada, se sustituye por un espacio
-    // El último caracter no se sustituye porque es \0
-    for(int i = 0; i < tam - 1; i++){
-        if(!cadena[i]) cadena[i] = ' ';
-    }
+//Revisa el archivo menu para determinar cuantos registros se encuentran guardados y saber el ultimo NRR
+int contarLineas(){
+    int lineas = 0;
+    ifstream in("MENU.txt");
+    char unused[TAMREGISTRO] = "";
+    while (in.getline(unused, TAMREGISTRO))
+        ++lineas;
+    return lineas-1;
 }
 
 void insertarRegistro(){
-    ofstream archivo;
-    ofstream indice;
+    ofstream archivoMenu;
+    ofstream archivoIndice;
 
     // Se piden todos los datos del producto
     char n[TAMNOMBRE] = "";
@@ -299,81 +310,91 @@ void insertarRegistro(){
     llenarCampo(p, TAMPRECIO);
     llenarCampo(e, TAMESPECIALIDAD);
 
-    Producto a(n, d, p, e);
+    Producto producto(n, d, p, e);
 
     cout<<"\nProducto insertado"<<endl;
-    a.mostrar();
+    producto.mostrar();
 
-    archivo.open("MENU.txt", ios::app);
-    if(archivo.fail()){
+    archivoMenu.open("MENU.txt", ios::app);
+    if(archivoMenu.fail()){
         cout<<"No se pudo abrir el archivo (MENU)"<<endl;
         system("pause");
         exit(1);
     }
 
-    indice.open("INDICE.txt", ios::app);
-    if(indice.fail()){
+    archivoIndice.open("INDICE.txt", ios::app);
+    if(archivoIndice.fail()){
         cout<<"No se pudo abrir el archivo (INDICE)"<<endl;
         system("pause");
         exit(1);
     }
 
     // Se inserta el registro al archivo
-    archivo<<a;
+    archivoMenu<<producto;
 
     //Una vez agregados los datos, va al archivo menu, cuenta la cantidad de lineas registradas (accede a la funcion contar lineas)
     ultimoNRR = contarLineas();
-    indice<<a.getCodigo()<<"|"<<ultimoNRR<<endl;
+    archivoIndice<<producto.getCodigo()<<"|"<<ultimoNRR<<endl;
 
-    archivo.close();
-    indice.close();
-
-    system("pause");
+    archivoMenu.close();
+    archivoIndice.close();
 }
 
 void leerRegistro(){
-    //! POR AHORA LEE TODOS LOS REGISTROS (CAMBIAR)
-    //! UTILIZAR EL INDICE
-    ifstream archivo;
+    ifstream archivoMenu;
+    ifstream archivoIndice;
+    char c[TAMCODIGO] = "";
+    int NRREncontrado = 0;
+    int distancia, encontrado = 0;
 
-    archivo.open("MENU.txt", ios::in);
-
-    if(archivo.fail()){
+    archivoMenu.open("MENU.txt", ios::in);
+    if(archivoMenu.fail()){
         cout<<"No se pudo abrir el archivo (MENU)"<<endl;
         system("pause");
         exit(1);
     }
 
-    while(!archivo.eof()){
-        /*  Mientras no sea el final del archivo
-            obtiene los datos de cada registro */
+    archivoIndice.open("INDICE.txt", ios::in);
+    if(archivoIndice.fail()){
+        cout<<"No se pudo abrir el archivo (INDICE)"<<endl;
+        system("pause");
+        exit(1);
+    }
+
+    // Pedir el código para buscar
+    cout<<"Ingresa el codigo a buscar: ";
+    cin.ignore();
+    cin.getline(c, TAMCODIGO);
+    llenarCampo(c, TAMCODIGO);
+
+    // Obtener el NRR utilizando el código
+    // Búsqueda secuencial
+    while(!archivoIndice.eof() && !encontrado){
         char codigo[TAMCODIGO];
-        char nombre[TAMNOMBRE];
-        char descripcion[TAMDESCRIPCION];
-        char precio[TAMPRECIO];
-        char especialidad[TAMESPECIALIDAD];
+        char NRR[TAMNRR];
+        archivoIndice.getline(codigo, TAMCODIGO, '|');
+        archivoIndice.getline(NRR, TAMNRR, '\n');
 
-        archivo.getline(codigo, TAMCODIGO, '|');
-        archivo.getline(nombre, TAMNOMBRE, '|');
-        archivo.getline(descripcion, TAMDESCRIPCION, '|');
-        archivo.getline(precio, TAMPRECIO, '|');
-        archivo.getline(especialidad, TAMESPECIALIDAD, '\n');
-
-        // Si existen los datos se muestran
-        if(codigo != "" && nombre != "" && descripcion != "" && precio != "" && especialidad != ""){
-            cout<<codigo<<"|"<<nombre<<"|"<<descripcion<<"|"<<precio<<"|"<<especialidad<<endl;
+        if(strcmp(c, codigo) == 0){
+            encontrado = 1;
+            NRREncontrado = stoi(NRR);
         }
     }
 
-    archivo.close();
-}
+    // Buscar el registro con la distancia utilizando el NRR
+    if(encontrado){
+        distancia = NRREncontrado * (TAMREGISTRO + 1); // Se le suma 1 para pasar a la siguiente linea
+        archivoMenu.seekg(distancia);
 
-//Revisa el archivo menu para determinar cuantos registros se encuentran guardados y saber el ultimo NRR
-int contarLineas(){
-    int lineas = 0;
-    ifstream in("MENU.txt");
-    char unused[TAMREGISTRO] = "";
-    while (in.getline(unused, TAMREGISTRO))
-        ++lineas;
-    return lineas-1;
+        // Obtener toda la información para mostrar
+        char informacion[TAMREGISTRO];
+        archivoMenu.getline(informacion, TAMREGISTRO, '\n');
+
+        cout<<"\nProducto encontrado:"<<endl;
+        cout<<informacion<<endl<<endl;
+    } else {
+        cout<<"\nProducto no encontrado\n"<<endl;
+    }
+
+    archivoMenu.close();
 }
