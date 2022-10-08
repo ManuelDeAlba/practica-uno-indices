@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <cstring>
 #include <fstream>
 #include <random> // Generador de numeros aleatorios
@@ -74,7 +75,7 @@ void Producto::crearCodigo(){
     char especial[TAMESPECIALIDAD] = "PICAR Y COMPARTIR"; // Cadena para comparar con la especialidad
     llenarCampo(especial, TAMESPECIALIDAD);
 
-    char c[20] = "";
+    char c[TAMCODIGO] = "";
     int aleatorio = distribution(generator);
     char cEspecialidad[3] = "";
     char cNombre[4] = {nombre[0], nombre[1], nombre[2]};
@@ -94,7 +95,7 @@ void Producto::crearCodigo(){
     strcat(c, cNombre);
 
     // Rellenar con espacios
-    llenarCampo(c, 20);
+    llenarCampo(c, TAMCODIGO);
 
     // Copiar la cadena temporal en el código
     strcpy(codigo, c);
@@ -136,6 +137,7 @@ int main(){
     char op;
     do{
         system("cls");
+        cout<<setw(16)<<"TELEPIZZA"<<endl;
         cout<<"1) Insertar"<<endl;
         cout<<"2) Consultar por codigo"<<endl;
         cout<<"3) Salir"<<endl;
@@ -214,13 +216,13 @@ void ordenarIndice(){
 
     //VERIFICA LA ULTIMA POSICION PARA COLOCAR LA POSICION CORRESPONDIENTE
     IndiceProducto auxIndice;
-    if((ultimoNRR+1)>1){
-        for(int i =1; i<ultimoNRR+1; i++){
-            for(int j =0; j<(ultimoNRR+1)-i; j++){
-                if(strcmp(indiceProducto[j].getCodigo(),indiceProducto[j+1].getCodigo()) > 0){
-                    auxIndice=indiceProducto[j];
-                    indiceProducto[j]=indiceProducto[j+1];
-                    indiceProducto[j+1]=auxIndice;
+    if((ultimoNRR + 1) > 1){
+        for(int i = 1; i < ultimoNRR + 1; i++){
+            for(int j =0; j < (ultimoNRR + 1) - i; j++){
+                if(strcmp(indiceProducto[j].getCodigo(), indiceProducto[j + 1].getCodigo()) > 0){
+                    auxIndice = indiceProducto[j];
+                    indiceProducto[j] = indiceProducto[j + 1];
+                    indiceProducto[j + 1] = auxIndice;
                 }
             }
         }
@@ -251,6 +253,7 @@ int contarLineas(){
     int lineas = 0;
     ifstream in("MENU.txt");
     char unused[TAMREGISTRO] = "";
+
     while (in.getline(unused, TAMREGISTRO))
         ++lineas;
     return lineas-1;
@@ -312,9 +315,6 @@ void insertarRegistro(){
 
     Producto producto(n, d, p, e);
 
-    cout<<"\nProducto insertado"<<endl;
-    producto.mostrar();
-
     archivoMenu.open("MENU.txt", ios::app);
     if(archivoMenu.fail()){
         cout<<"No se pudo abrir el archivo (MENU)"<<endl;
@@ -335,6 +335,9 @@ void insertarRegistro(){
     //Una vez agregados los datos, va al archivo menu, cuenta la cantidad de lineas registradas (accede a la funcion contar lineas)
     ultimoNRR = contarLineas();
     archivoIndice<<producto.getCodigo()<<"|"<<ultimoNRR<<endl;
+
+    cout<<"\nProducto insertado"<<endl;
+    producto.mostrar();
 
     archivoMenu.close();
     archivoIndice.close();
