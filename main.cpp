@@ -208,17 +208,12 @@ void ordenarIndice(){
     }
     archivoIndice.close();
 
-    // Mostrar registros del indice (sin ordenar)
-    // for(int i=0; i<ultimoNRR+1; i++){
-    //     cout<<"codigo: "<<indiceProducto[i].getCodigo()<<endl;
-    //     cout<<"NRR: "<<indiceProducto[i].getNRR()<<endl;
-    // }
-
     //VERIFICA LA ULTIMA POSICION PARA COLOCAR LA POSICION CORRESPONDIENTE
+    // Bubble Sort
     IndiceProducto auxIndice;
     if((ultimoNRR + 1) > 1){
         for(int i = 1; i < ultimoNRR + 1; i++){
-            for(int j =0; j < (ultimoNRR + 1) - i; j++){
+            for(int j = 0; j < ultimoNRR + 1 - i; j++){
                 if(strcmp(indiceProducto[j].getCodigo(), indiceProducto[j + 1].getCodigo()) > 0){
                     auxIndice = indiceProducto[j];
                     indiceProducto[j] = indiceProducto[j + 1];
@@ -228,12 +223,6 @@ void ordenarIndice(){
         }
     }
 
-    // Mostrar registros del indice (ordenados)
-    // for(int i=0; i<ultimoNRR+1; i++){
-    //     cout<<"codigo ordenado: "<<indiceProducto[i].getCodigo()<<endl;
-    //     cout<<"NRR ordenado: "<<indiceProducto[i].getNRR()<<endl;
-    // }
-
     ofstream indiceOut;
     indiceOut.open("INDICE.txt", std::ofstream::out | std::ofstream::trunc);
     if(indiceOut.fail()){
@@ -242,7 +231,8 @@ void ordenarIndice(){
         exit(1);
     }
 
-    for(int i=0; i<ultimoNRR+1; i++){
+    // Se insertan los registros ordenados en el índice
+    for(int i = 0; i < ultimoNRR + 1; i++){
         indiceOut<<indiceProducto[i].getCodigo()<<"|"<<indiceProducto[i].getNRR()<<endl;
     }
     indiceOut.close();
@@ -332,8 +322,9 @@ void insertarRegistro(){
     // Se inserta el registro al archivo
     archivoMenu<<producto;
 
-    //Una vez agregados los datos, va al archivo menu, cuenta la cantidad de lineas registradas (accede a la funcion contar lineas)
+    // Una vez agregados los datos, va al archivo menu, cuenta la cantidad de lineas registradas (accede a la funcion contar lineas)
     ultimoNRR = contarLineas();
+    // Se inserta el registro en el índice
     archivoIndice<<producto.getCodigo()<<"|"<<ultimoNRR<<endl;
 
     cout<<"\nProducto insertado"<<endl;
